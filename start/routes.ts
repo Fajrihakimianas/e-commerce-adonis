@@ -34,3 +34,5 @@ Route.get('users/:id', 'UsersController.show').middleware('auth')
 
 Route.get('products', 'ProductsController.show')
 Route.get('categories', 'ProductCategoriesController.index')
+
+Route.get('transactions', 'TransactionsController.index').middleware('auth')
