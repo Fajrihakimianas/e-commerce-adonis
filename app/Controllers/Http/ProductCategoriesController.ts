@@ -1,5 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
+import { schema } from '@ioc:Adonis/Core/Validator'
+import ProductCategory from 'App/Models/ProductCategory'
 
 export default class ProductCategoriesController {
   public async index({ response, request }: HttpContextContract) {
@@ -44,5 +46,20 @@ export default class ProductCategoriesController {
     let { meta, data } = productCategory.toJSON()
 
     return response.ok({ meta, data })
+  }
+
+  public async store({ response, request }: HttpContextContract) {
+    const payload = await request.validate({
+      schema: schema.create({
+        name: schema.string(),
+      }),
+      messages: {
+        'name.required': 'Name field is required',
+      },
+    })
+
+    const result = await ProductCategory.create(payload)
+
+    return response.ok({ data: result })
   }
 }
