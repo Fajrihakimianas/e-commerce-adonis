@@ -5,7 +5,7 @@
  * file.
  */
 
-import ApiToken from 'App/Models/ApiToken'
+import User from 'App/Models/User'
 
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
@@ -34,8 +34,8 @@ declare module '@ioc:Adonis/Addons/Auth' {
     |
     */
     user: {
-      implementation: LucidProviderContract<typeof ApiToken>
-      config: LucidProviderConfig<typeof ApiToken>
+      implementation: LucidProviderContract<typeof User>
+      config: LucidProviderConfig<typeof User>
     }
   }
 

@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, HasMany, beforeSave, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
-import Transaction from './Transaction'
-import ApiToken from './ApiToken'
 import Hash from '@ioc:Adonis/Core/Hash'
+import { column, beforeSave, BaseModel, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import ApiToken from './ApiToken'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -23,21 +22,16 @@ export default class User extends BaseModel {
   @column()
   public roles: string
 
-  @hasMany(() => Transaction, {
-    foreignKey: 'users_id',
-  })
-  public transactions: HasMany<typeof Transaction>
-
-  @hasMany(() => ApiToken, {
-    foreignKey: 'users_id',
-  })
-  public tokens: HasMany<typeof ApiToken>
-
   @column.dateTime({ autoCreate: true })
-  public created_at: DateTime
+  public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updated_at: DateTime
+  public updatedAt: DateTime
+
+  @hasMany(() => ApiToken, {
+    foreignKey: 'user_id',
+  })
+  public apiTokens: HasMany<typeof ApiToken>
 
   @beforeSave()
   public static async hashPassword(user: User) {

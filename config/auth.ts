@@ -52,7 +52,7 @@ const authConfig: AuthConfig = {
         type: 'api',
         driver: 'database',
         table: 'api_tokens',
-        foreignKey: 'users_id',
+        foreignKey: 'user_id',
       },
 
       provider: {
@@ -100,7 +100,7 @@ const authConfig: AuthConfig = {
         | that time.
         |
         */
-        model: () => import('App/Models/ApiToken'),
+        model: () => import('App/Models/User'),
       },
     },
   },
