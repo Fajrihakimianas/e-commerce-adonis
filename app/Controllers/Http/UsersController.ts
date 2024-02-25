@@ -1,13 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import User from 'App/Models/User'
 
 export default class UsersController {
   public async index({ response }: HttpContextContract) {
-    let result = await Database.from('users')
-      .select('id', 'username', 'email', 'phone', 'roles', 'created_at', 'updated_at')
-      .orderBy('id', 'desc')
-      .paginate(1, 10)
+    let result = await User.query().orderBy('id', 'desc').paginate(1, 10)
 
     let { meta, data } = result.toJSON()
 
