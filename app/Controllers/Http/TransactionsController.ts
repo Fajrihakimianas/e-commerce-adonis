@@ -74,7 +74,7 @@ export default class TransactionsController {
       })
     }
 
-    await transaction?.preload('items', (query) => {
+    await transaction?.load('items', (query) => {
       query.preload('products')
     })
 
