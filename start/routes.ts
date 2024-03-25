@@ -24,8 +24,19 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
-Route.get('products', 'ProductsController.show')
-Route.get('categories', 'ProductCategoriesController.index')
-
 Route.post('register', 'AuthController.register')
 Route.post('login', 'AuthController.login')
+Route.post('logout', 'AuthController.logout').middleware('auth')
+
+Route.get('users', 'UsersController.index').middleware('auth')
+Route.post('users', 'UsersController.update').middleware('auth')
+Route.get('users/:id', 'UsersController.show').middleware('auth')
+
+Route.post('products', 'ProductsController.store')
+Route.get('products', 'ProductsController.show')
+
+Route.post('categories', 'ProductCategoriesController.store')
+Route.get('categories', 'ProductCategoriesController.index')
+
+Route.get('transactions', 'TransactionsController.index').middleware('auth')
+Route.post('transactions', 'TransactionsController.store').middleware('auth')

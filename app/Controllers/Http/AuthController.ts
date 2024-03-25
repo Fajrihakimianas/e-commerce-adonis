@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import { v4 as uuid } from 'uuid'
 import RegisterValidator from 'App/Validators/RegisterValidator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 export default class AuthController {
   public async register({ auth, request, response }: HttpContextContract) {
@@ -9,35 +9,43 @@ export default class AuthController {
 
     const { username, email, password, phone } = payload
 
-    const saveUser = await User.create({
+    const user = await User.create({
       username,
       email,
       password,
       phone,
     })
 
-    // const token = await saveUser.related('tokens').create({
-    //   tokens: uuid(),
-    //   email: saveUser.email,
-    //   password: saveUser.password,
-    // })
+    const token = await auth.use('api').attempt(email, password)
 
-    // const token = await auth.use('api').attempt(payload.email, payload.password)
-
-    return response.ok({ saveUser })
+    return response.ok({ meta: { ...token }, data: user })
   }
 
-  public async login({ auth, request }: HttpContextContract) {
-    const email = request.input('email')
-    const password = request.input('password')
+  public async login({ auth, request, response }: HttpContextContract) {
+    const req = await request.validate({
+      schema: schema.create({
+        email: schema.string({}, [rules.email()]),
+        password: schema.string({}, [rules.minLength(8)]),
+      }),
+      messages: {
+        'email.required': 'Email field is required',
+        'password.required': 'Password field is required',
+        'password.minLength': 'Password must be at least 8 characters',
+      },
+    })
+
+    const email = req.email
+    const password = req.password
 
     const token = await auth.use('api').attempt(email, password)
 
-    return token
+    return response.ok({ meta: { ...token } })
   }
 
-  public async logout({}: HttpContextContract) {
-    return 'Hello World'
+  public async logout({ auth }: HttpContextContract) {
+    await auth.logout()
+
+    return 'Logged out successfully'
   }
 
   public async forgotPassword({}: HttpContextContract) {

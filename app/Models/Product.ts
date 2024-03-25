@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import ProductGallery from './ProductGallery'
 import ProductCategory from './ProductCategory'
+import TransactionItem from './TransactionItem'
 
 export default class Product extends BaseModel {
   @column({ isPrimary: true })
@@ -30,7 +31,12 @@ export default class Product extends BaseModel {
   @belongsTo(() => ProductCategory, {
     foreignKey: 'categories_id',
   })
-  public category: BelongsTo<typeof ProductCategory>
+  public categories: BelongsTo<typeof ProductCategory>
+
+  @belongsTo(() => TransactionItem, {
+    foreignKey: 'products_id',
+  })
+  public products: BelongsTo<typeof TransactionItem>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

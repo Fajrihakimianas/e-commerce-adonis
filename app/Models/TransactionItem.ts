@@ -19,9 +19,9 @@ export default class TransactionItem extends BaseModel {
   public quantity: number
 
   @hasOne(() => Product, {
-    foreignKey: 'products_id',
+    foreignKey: 'id',
   })
-  public product: HasOne<typeof Product>
+  public products: HasOne<typeof Product>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime
